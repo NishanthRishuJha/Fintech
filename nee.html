@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Card Login & Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="icon" href="icon.png">
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #6ea4e2, #313488);
+            font-family: 'Poppins', sans-serif;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        /* Background Image on the Left */
+        .bg-image {
+            position: absolute;
+            left: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 450px; /* Adjust size */
+            height: auto;
+            opacity: 0.8; /* Slight transparency */
+        }
+
+        .card-container {
+            position: relative;
+            width: 480px;
+            height: 520px;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            z-index: 2;
+        }
+
+        .card-container.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            background: linear-gradient(135deg, #0d0d0d, #434343);
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            padding: 35px;
+            color: white;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .card.back {
+            transform: rotateY(180deg);
+        }
+
+        .bank-logo {
+            font-size: 22px;
+            font-weight: bold;
+            text-transform: uppercase;
+            text-align: right;
+        }
+
+        .card-title {
+            font-size: 26px;
+            margin-top: 60px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .input-box {
+            width: 100%;
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        .input-box i {
+            color: white;
+            margin-right: 12px;
+        }
+
+        .input-box input {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            outline: none;
+            color: white;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            background: #ffcc00;
+            color: black;
+            border: none;
+            font-size: 20px;
+            margin-top: 30px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #ffaa00;
+        }
+
+        .toggle-link {
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .toggle-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .bg-image {
+                display: none; /* Hide background image on small screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Image -->
+    <img src="Credit card-amico.png" alt="Background Image" class="bg-image">
+
+    <div class="card-container" id="card-container">
+        <div class="card front">
+            <div class="bank-logo">My Cards</div>
+            <div class="card-title">Login</div>
+            <div class="input-box">
+                <i class="fas fa-user"></i>
+                <input type="text" id="login-username" placeholder="Username">
+            </div>
+            <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="login-password" placeholder="Password">
+                <i class="fas fa-eye toggle-password" onclick="togglePassword('login-password')"></i>
+            </div>
+            <button class="btn" id="login-btn">Login</button>
+            <span class="toggle-link" id="toggle">Don't have an account? Sign Up</span>
+        </div>
+        <div class="card back">
+            <div class="bank-logo">Your Bank</div>
+            <div class="card-title">Sign Up</div>
+            <div class="input-box">
+                <i class="fas fa-user"></i>
+                <input type="text" id="signup-username" placeholder="Username">
+            </div>
+            <div class="input-box">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="signup-password" placeholder="Password">
+                <i class="fas fa-eye toggle-password" onclick="togglePassword('signup-password')"></i>
+            </div>
+            <div class="input-box">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="signup-email" placeholder="Email">
+            </div>
+            <div class="input-box">
+                <i class="fas fa-calendar"></i>
+                <input type="date" id="signup-dob" placeholder="Date of Birth">
+            </div>
+            <button class="btn" id="signup-btn">Sign Up</button>
+            <span class="toggle-link" id="toggle-back">Already have an account? Login</span>
+        </div>
+    </div>
+
+    <script>
+        const cardContainer = document.getElementById("card-container");
+        const toggle = document.getElementById("toggle");
+        const toggleBack = document.getElementById("toggle-back");
+        const loginBtn = document.getElementById("login-btn");
+        const signupBtn = document.getElementById("signup-btn");
+
+        toggle.addEventListener("click", () => {
+            cardContainer.classList.add("flipped");
+        });
+
+        toggleBack.addEventListener("click", () => {
+            cardContainer.classList.remove("flipped");
+        });
+
+        signupBtn.addEventListener("click", () => {
+            const username = document.getElementById("signup-username").value;
+            const password = document.getElementById("signup-password").value;
+            if (!username || !password) {
+                alert("Please fill all fields!");
+                return;
+            }
+            localStorage.setItem("username", username);
+            localStorage.setItem("password", password);
+            alert("Signup successful! You can now log in.");
+            toggleBack.click();
+        });
+
+        loginBtn.addEventListener("click", () => {
+            const storedUser = localStorage.getItem("username");
+            const storedPass = localStorage.getItem("password");
+            const username = document.getElementById("login-username").value;
+            const password = document.getElementById("login-password").value;
+            if (username === storedUser && password === storedPass) {
+                alert("Login successful!");
+            } else {
+                alert("Invalid credentials");
+            }
+        });
+
+        function togglePassword(id) {
+            const input = document.getElementById(id);
+            input.type = input.type === "password" ? "text" : "password";
+        }
+    </script>
+</body>
+</html>
